@@ -95,4 +95,20 @@ public class MyHashMapTest {
 
     }
 
+    @Test
+    public void putAll() {
+        map = new HashMap();
+        myMap = new MyHashMap();
+        int rangeTest = 10000;
+
+        for (int i = 0; i < rangeTest; i++) {
+            map.put(i, "value" + i);
+        }
+       myMap.putAll(map);
+
+        for (int i = 0; i < myMap.size() ; i++) {
+            Object result = myMap.get(i);
+            assertEquals("value" + i, (String) result);
+        }
+    }
 }
