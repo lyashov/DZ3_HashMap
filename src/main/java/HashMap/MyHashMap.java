@@ -166,12 +166,27 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
 
     @Override
     public boolean containsValue(Object value) {
+        for (int i = 0; i < arr.length; i++) {
+            if (value.equals(arr[i].getValue())){
+                return true;
+            }
+            Pair<T1, T2> pair = arr[i];
+            Pair<T1, T2> child;
+            while ((child = getChild(pair)) != null) {
+                if (value.equals(child.getValue())){
+                    return true;
+                }
+                pair = child;
+            }
+        }
         return false;
     }
 
     @Override
     public void putAll(Map<? extends T1, ? extends T2> m) {
-
+        for (Map.Entry<?, ?> entry : m.entrySet()) {
+            put((T1)entry.getKey(), (T2)entry.getValue());
+        }
     }
 
     @Override
@@ -185,6 +200,12 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         HashMap<T1, T2> hashMap = new HashMap<>();
         for (int i = 0; i < arr.length; i++) {
             hashMap.put(arr[i].getKey(), arr[i].getValue());
+            Pair<T1, T2> pair = arr[i];
+            Pair<T1, T2> child;
+            while ((child = getChild(pair)) != null) {
+                hashMap.put(child.getKey(), child.getValue());
+                pair = child;
+            }
         }
         return hashMap;
     }
