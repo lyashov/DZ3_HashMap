@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 public class MyHashMapTest {
     MyHashMap myMap;
+
     HashMap map;
 
     @Test
@@ -69,7 +70,7 @@ public class MyHashMapTest {
             assertEquals(rangeTest, size);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void remove() {
         myMap = new MyHashMap();
         map = new HashMap();
@@ -85,6 +86,10 @@ public class MyHashMapTest {
             Object result = myMap.remove(i);
             assertEquals("value" + i, (String) result);
         }
+
+        // throw Exception NullPointerException
+        myMap.remove(0);
+
         assertEquals(0, myMap.size());
 
         for (int i = 0; i < rangeTest; i++) {
