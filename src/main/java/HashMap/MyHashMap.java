@@ -7,7 +7,7 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
     private static int arrayMaxSize = 16;
     private int size = 0;
 
-    static class Pair<T1, T2> {
+    private static class Pair<T1, T2> {
         private final T1 key;
         private final T2 value;
         private int hashCode;
