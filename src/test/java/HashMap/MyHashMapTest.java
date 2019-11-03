@@ -154,6 +154,6 @@ public class MyHashMapTest {
             assertEquals(map.containsValue("value" + i), true);
 
         assertNotEquals(myMap.containsValue("valueXXX"),true);
-        assertNotEquals(map.containsValue("valueddddd"),true);
+        assertNotEquals(map.containsValue("valueXXX"),true);
     }
 }
