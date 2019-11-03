@@ -1,6 +1,5 @@
 package HashMap;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -8,9 +7,8 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 
 public class MyHashMapTest {
-    MyHashMap myMap;
-
-    HashMap map;
+    private MyHashMap myMap;
+    private HashMap map;
 
     @Test
     public void put() {
@@ -115,5 +113,47 @@ public class MyHashMapTest {
             Object result = myMap.get(i);
             assertEquals("value" + i, (String) result);
         }
+    }
+
+    @Test
+    public void clear() {
+        myMap = new MyHashMap();
+        map = new HashMap();
+        int rangeTest = 10000;
+
+        for (int i = 0; i < rangeTest; i++)
+            myMap.put(i, "value" + i);
+
+        for (int i = 0; i < rangeTest; i++)
+            map.put(i, "value" + i);
+
+        myMap.clear();
+        map.clear();
+        assertEquals(myMap.size(), 0);
+        assertEquals(map.size(), 0);
+
+    }
+
+    @Test
+    public void containsValue() {
+        myMap = new MyHashMap();
+        map = new HashMap();
+        int rangeTest = 10000;
+
+        for (int i = 0; i < rangeTest; i++)
+            myMap.put(i, "value" + i);
+
+        for (int i = 0; i < rangeTest; i++)
+            map.put(i, "value" + i);
+
+
+        for (int i = 0; i < rangeTest; i++)
+            assertEquals(myMap.containsValue("value" + i),true);
+
+        for (int i = 0; i < rangeTest; i++)
+            assertEquals(map.containsValue("value" + i), true);
+
+        assertNotEquals(myMap.containsValue("valueXXX"),true);
+        assertNotEquals(map.containsValue("valueddddd"),true);
     }
 }
