@@ -156,4 +156,34 @@ public class MyHashMapTest {
         assertNotEquals(myMap.containsValue("valueXXX"),true);
         assertNotEquals(map.containsValue("valueXXX"),true);
     }
+
+    @Test
+    public void isEmpty() {
+        myMap = new MyHashMap();
+        map = new HashMap();
+        int rangeTest = 10000;
+
+        for (int i = 0; i < rangeTest; i++) {
+            myMap.put(i, "value" + i);
+            map.put(i, "value" + i);
+        }
+
+        assertEquals(myMap.isEmpty(), false);
+        assertEquals(map.isEmpty(), false);
+    }
+
+    @Test
+    public void containsKey() {
+        myMap = new MyHashMap();
+        map = new HashMap();
+        int rangeTest = 10000;
+
+        for (int i = 0; i < rangeTest; i++) {
+            myMap.put(i, "value" + i);
+            map.put(i, "value" + i);
+        }
+
+        assertEquals(myMap.containsKey(1), true);
+        assertEquals(map.containsKey(1), true);
+    }
 }
