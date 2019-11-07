@@ -144,6 +144,14 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         for (Pair pair : tmpTable) {
             if (pair == null) continue;
             putKeyValue((T1) pair.getKey(), (T2) pair.getValue(), true);
+            Pair<T1, T2> child;
+            while ((child = getChild(pair)) != null) {
+                Pair<T1, T2> parent = pair;
+                putKeyValue((T1) pair.getKey(), (T2) pair.getValue(), true);
+                this.size--;
+                pair = child;
+            }
+
         }
     }
 
