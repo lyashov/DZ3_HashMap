@@ -2,31 +2,64 @@ package HashMap;
 
 import java.util.*;
 
+/**
+ * Class contains two generic's parametrs
+ * @param <T1>
+ * @param <T2>
+ * Map interface inmlementation.
+ * @autor Lyashov Evgeniy
+ * @version 1.2
+ */
 public class MyHashMap<T1, T2> implements Map<T1, T2> {
     private float loadFactor = 0.75f;
     private static int arrayMaxSize = 16;
     private int size = 0;
 
+    /** Class pair realize a hashmap element
+     * element consist of key , value, hashcode and link to next elelent the hashmap
+     * @param <T1>
+     * @param <T2>
+     */
     private static class Pair<T1, T2> {
         private final T1 key;
         private final T2 value;
         private int hashCode;
         Pair<T1, T2> next;
 
+        /**
+         * Pair constructor
+         * @param key
+         * @param value
+         * @param sizeForHash
+         */
         private Pair(T1 key, T2 value, int sizeForHash) {
             this.key = key;
             this.value = value;
             this.hashCode = keyHashCode(key.hashCode(), sizeForHash);
         }
 
+        /**
+         * Generane hash kode for key
+         * @param hashCode
+         * @param sizeForHash
+         * @return
+         */
         private static int keyHashCode(int hashCode, int sizeForHash) {
             return Math.abs(hashCode) % (sizeForHash - 1);
         }
 
+        /**
+         *
+         * @return hashmap's key element
+         */
         private T1 getKey() {
             return key;
         }
 
+        /**
+         *
+         * @return hashmap's value element
+         */
         private T2 getValue() {
             return value;
         }
@@ -34,11 +67,47 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
 
     private Pair<T1, T2>[] arr = new Pair[arrayMaxSize];
 
+    /**
+     * Put element in hash map
+     * if key = null create NullPPointerException
+     * @param key
+     * @param value
+     * @return
+     */
     public T2 put(T1 key, T2 value) {
         if (key == null) throw new NullPointerException();
         return putKeyValue(key, value, false);
     }
 
+    /**
+     * Get child for pair
+     * @param pair
+     * @return
+     */
+    private Pair<T1, T2> getChild(Pair<T1, T2> pair) {
+        return pair.next;
+    }
+
+    private boolean haveCollision(Pair pair, int index){
+        Pair<T1, T2> child;
+        while ((child = getChild(pair)) != null) {
+            if (!pair.getKey().equals(arr[index].getKey())) {
+                return true;
+            }
+            pair = child;
+        }
+            return false;
+    }
+
+
+        /**
+     * private method, that does put key, value into hashmap
+     * flag isResaize is needed for resize hashmap
+     * @param key
+     * @param value
+     * @param isResize
+     * @return
+     */
     private T2 putKeyValue(T1 key, T2 value, boolean isResize) {
         if (arr.length != 0) {
             float persent = (float) size() / (float) arr.length;
@@ -50,11 +119,11 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
             arr[index] = pair;
             if (!isResize) this.size++;
         }
-        else if (!pair.getKey().equals(arr[index].getKey())) {
-            //if collision
-            pair.next = arr[index];
-            arr[index] = pair;
-            if (!isResize) this.size++;
+        else if (haveCollision(pair, index)){
+                    //if collision
+                    pair.next = arr[index];
+                    arr[index] = pair;
+                    if (!isResize) this.size++;
         }
         //update element
         else {
@@ -64,6 +133,10 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         return pair.getValue();
     }
 
+    /**
+     * Resize hashmap
+     * @param newCapacity
+     */
     private void resize(int newCapacity) {
         Pair[] newTable = new Pair[newCapacity];
         Pair[] tmpTable = Arrays.copyOf(arr, arr.length);
@@ -74,18 +147,29 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         }
     }
 
+    /**
+     * Check hashmap is empty
+     * @return is empty
+     */
     public boolean isEmpty() {
         return size() == 0;
     }
 
+    /**
+     * Contains ke
+     * @param key
+     * @return
+     */
     public boolean containsKey(Object key) {
          return get(key) != null ? true : false;
     }
 
-    private Pair<T1, T2> getChild(Pair<T1, T2> pair) {
-        return pair.next;
-    }
 
+    /**
+     * Get hashmap's key
+     * @param key
+     * @return
+     */
     public T2 get(Object key) {
         int hashCodeKey = Pair.keyHashCode(key.hashCode(), arr.length);
         if (arr[hashCodeKey] == null) return null;
@@ -103,6 +187,11 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         }
     }
 
+    /**
+     * Remove hashmap's element by key
+     * @param key
+     * @return
+     */
     public T2 remove(Object key) {
         int hashCodeKey = Pair.keyHashCode(key.hashCode(), arr.length);
         Pair<T1, T2> pair = arr[hashCodeKey];
@@ -131,10 +220,17 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         }
     }
 
+    /**
+     * @return hashmap's size
+     */
     public int size() {
         return this.size;
     }
 
+    /**
+     * Override method Set
+     * @return
+     */
     @Override
     public Set<Entry<T1, T2>> entrySet() {
         HashMap<T1, T2> hashMap = new HashMap<>();
@@ -142,6 +238,11 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         return hashMap.entrySet();
     }
 
+    /**
+     * Override method containsValue
+     * @param value
+     * @return
+     */
     @Override
     public boolean containsValue(Object value) {
         for (int i = 0; i < arr.length; i++) {
@@ -161,6 +262,10 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         return false;
     }
 
+    /**
+     * Override method putAll
+     * @param m
+     */
     @Override
     public void putAll(Map<? extends T1, ? extends T2> m) {
         for (Map.Entry<?, ?> entry : m.entrySet()) {
@@ -176,6 +281,10 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         this.size = 0;
     }
 
+    /**
+     * Fill hashmap from arr
+     * @return hashmap
+     */
     private HashMap fillHashMap(){
         HashMap<T1, T2> hashMap = new HashMap<>();
         for (int i = 0; i < arr.length; i++) {
@@ -189,12 +298,21 @@ public class MyHashMap<T1, T2> implements Map<T1, T2> {
         }
         return hashMap;
     }
+
+    /**
+     * Override method Set
+     * @return
+     */
     @Override
     public Set<T1> keySet() {
         HashMap<T1, T2> hashMap = fillHashMap();
         return hashMap.keySet();
     }
 
+    /**
+     * Override collection
+     * @return
+     */
     @Override
     public Collection<T2> values() {
         HashMap<T1, T2> hashMap = fillHashMap();
